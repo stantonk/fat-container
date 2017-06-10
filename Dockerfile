@@ -22,4 +22,22 @@ RUN echo 'root:silly' | chpasswd
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# make this work like it's a vagrant box
+# mendel is designed to assume local deployments are vagrant deployments
+RUN adduser vagrant
+RUN adduser --home /srv/myservice --system --disabled-password --group myservice
+RUN echo 'vagrant:vagrant' | chpasswd
+RUN usermod -aG sudo vagrant
+
+# replicate sprout_java LWRP
+RUN adduser --home /srv/myservice --system --disabled-password --group myservice
+ADD ./myservice.conf /etc/init/myservice.conf
+RUN mkdir /srv/myservice/releases
+RUN mkdir /srv/myservice/releases/init
+RUN ln -sfT /srv/myservice/releases/init /srv/myservice/current
+RUN chown -R myservice:myservice /srv/myservice
+
+# expose port for myservice
+EXPOSE 8080
+
 CMD ["/sbin/init"]
