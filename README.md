@@ -5,7 +5,7 @@ fat-container
 Essentially what I wanted here was something like Vagrant but isn't slow as h\*ck to spin up and provision.
 
 ```
-$ docker run -d --rm -p8080:8080 -p2222:22 fat-container
+$ docker run -d --rm -p8080:8080 -p2222:22 stantonk/fat-container:1.0
 
 $  ssh -p2222 vagrant@127.0.0.1
 vagrant@127.0.0.1's password:
