@@ -1,0 +1,6 @@
+template: Hello, bruh!
+defaultName: Stranger
+logging:
+  level: INFO
+  loggers:
+    com.github.Ibracadabra05: DEBUG
