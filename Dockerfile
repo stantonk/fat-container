@@ -4,13 +4,16 @@ RUN apt-get update && apt-get install -y software-properties-common
 
 #borrowed this bit from opentable/baseimage-java8
 # Install Java.
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
+  apt-get install -y \
+  	oracle-java8-installer \
+  	vim && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   rm -rf /var/cache/oracle-jdk8-installer
+
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
@@ -18,9 +21,6 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 # want sshd running for testing mendel
 # set root password
 RUN echo 'root:silly' | chpasswd
-
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # make this work like it's a vagrant box
 # mendel is designed to assume local deployments are vagrant deployments
@@ -54,10 +54,7 @@ RUN mkdir /srv/myservice-remote_jar/releases/init
 RUN ln -sfT /srv/myservice-remote_jar/releases/init /srv/myservice-remote_jar/current
 RUN chown -R myservice-remote_jar:myservice-remote_jar /srv/myservice-remote_jar
 ADD ./myservice-remote_jar.yml /srv/myservice-remote_jar/
-
-# install vim
-RUN apt-get update
-RUN apt-get install vim -y 
+ 
 
 # expose port for myservice
 EXPOSE 8080
